@@ -60,11 +60,11 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
   const form = useForm<FormInput, CreateTransactionSchemaType, FormOutput>({
     resolver: zodResolver(CreateTransactionSchema),
     defaultValues: {
-       type,
-    amount: 0,
-    description: "",
-    category: "",
-    date: new Date(),
+      type,
+      amount: 0,
+      description: "",
+      category: "",
+      date: new Date(),
     },
   });
   const queryClient = useQueryClient();
@@ -157,7 +157,15 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
                   <FormLabel>Amount</FormLabel>
 
                   <FormControl>
-                    <Input placeholder="0" type="number" {...field} />
+                    <Input
+                      placeholder="0"
+                      type="number"
+                       value={field.value as number | string | undefined}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
                   </FormControl>
 
                   <FormDescription>
@@ -192,48 +200,51 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
               <FormField
                 control={form.control}
                 name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Trsansaction date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "pl-2 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={(value)=>{
+                render={({ field }) => {
+                  const selectedDate = field.value as Date | undefined;
 
-                            if(!value) return
-                            field.onChange(value)
-                          }}
-                          autoFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                  return (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Trsansaction date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "pl-2 text-left font-normal",
+                                !selectedDate && "text-muted-foreground",
+                              )}
+                            >
+                              {selectedDate ? (
+                                format(selectedDate, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={(value) => {
+                              if (!value) return;
+                              field.onChange(value);
+                            }}
+                            autoFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
 
-                    <FormDescription>
-                      Select a date for this Transaction
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                      <FormDescription>
+                        Select a date for this Transaction
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
           </form>
