@@ -160,7 +160,7 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
                     <Input
                       placeholder="0"
                       type="number"
-                       value={field.value as number | string | undefined}
+                      value={field.value as number | string | undefined}
                       onChange={field.onChange}
                       onBlur={field.onBlur}
                       name={field.name}
