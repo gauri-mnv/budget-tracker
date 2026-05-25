@@ -24,7 +24,7 @@ if(!transaction){
 
 await prisma.$transaction([
     
-    await prisma.transaction.delete({
+   prisma.transaction.delete({
         where: {
             userId: user.id,
             id,
@@ -68,7 +68,7 @@ await prisma.$transaction([
                    },
                }),
                  ...(transaction.type === "income" && {
-                   income: {
+                   income: { decrement: transaction.amount,
                   },
       }),
     },

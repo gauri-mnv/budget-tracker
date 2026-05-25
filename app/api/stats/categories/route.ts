@@ -24,8 +24,9 @@ const to = searchParams.get("to");
 
  const stats = await getCategoriesStats(
     user.id,
-    queryParam.data.from,
-    queryParam.data.to);
+    new Date(queryParam.data.from),
+    new Date(queryParam.data.to)
+);
  
 return Response.json(stats);
 };
